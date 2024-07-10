@@ -2,8 +2,8 @@ name: ci
 
 on:
   push:
-    tags:
-      - "*"
+    branches:
+      - main
 
 jobs:
   docker:
@@ -19,7 +19,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: djosani/cloud-run-proxy
+          images: djosani/cloud-run-proy
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         if: ${{ github.event_name != 'pull_request' }}
