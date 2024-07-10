@@ -13,6 +13,13 @@ export class ProxyService {
         timeout: request.timeout,
         headers: request.headers,
         data: request.body,
+        proxy: request.proxyHost
+          ? {
+              protocol: 'http',
+              host: request.proxyHost,
+              port: 80,
+            }
+          : null,
       });
 
       return {
