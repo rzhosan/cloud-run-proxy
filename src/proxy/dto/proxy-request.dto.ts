@@ -1,5 +1,5 @@
 import { Method } from 'axios';
-import { IsString, IsOptional, IsNumber, IsObject } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsObject, IsIP } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ProxyRequestDto {
@@ -33,7 +33,7 @@ export class ProxyRequestDto {
   body?: Record<string, any> = {};
 
   @ApiProperty({ default: null, description: 'A proxy host or IP address' })
-  @IsObject()
+  @IsIP()
   @IsOptional()
-  proxyHost?: string;
+  proxyIp?: string;
 }
