@@ -1,5 +1,5 @@
 import { Injectable, HttpStatus } from '@nestjs/common';
-import axios from 'axios';
+import axios from 'axios-https-proxy-fix';
 import { ProxyRequestDto } from './dto/proxy-request.dto';
 import { ProxyResponseDto } from './dto/proxy-response.dto';
 
@@ -15,7 +15,6 @@ export class ProxyService {
         data: request.body,
         proxy: request.proxyIp
           ? {
-              protocol: 'http',
               host: request.proxyIp,
               port: 80,
             }

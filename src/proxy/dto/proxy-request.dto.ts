@@ -1,11 +1,20 @@
-import { Method } from 'axios';
-import { IsString, IsOptional, IsNumber, IsObject, IsIP } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNumber,
+  IsObject,
+  IsIP,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ProxyRequestDto {
-  @ApiProperty({ example: 'get' })
+  @ApiProperty({
+    example: 'get',
+    default: 'get',
+    description: 'Request method',
+  })
   @IsString()
-  method?: Method = 'get';
+  method?: string = 'get';
 
   @ApiProperty({ example: 'https://jsonplaceholder.typicode.com/posts/1' })
   @IsString()
