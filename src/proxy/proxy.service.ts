@@ -36,7 +36,7 @@ export class ProxyService {
       } else if (error.request) {
         return {
           status: HttpStatus.GATEWAY_TIMEOUT,
-          data: 'No response received from the server within the timeout period',
+          data: `No response received from the server within the timeout period. Message: ${error.message}`,
         };
       } else {
         return {
