@@ -6,11 +6,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Cloud Run Typescript API Proxy Example')
+    .setTitle('V2 - Cloud Run Typescript API Proxy Example')
     .setDescription(
       'Allows to test Networking setup for the typescript API service deployed on Cloud Run',
     )
-    .setVersion('1.0')
+    .setVersion('2.0')
     .addTag('proxy')
     .build();
 
