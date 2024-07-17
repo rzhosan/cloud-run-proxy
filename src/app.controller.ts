@@ -8,7 +8,7 @@ export class AppController {
   @HttpCode(HttpStatus.OK)
   async handleProxy(): Promise<any> {
     return {
-      version: '1.0',
+      version: process.env.VERSION || 'unspecified',
       healthy: true,
       timestamp: new Date().toISOString(),
     };
