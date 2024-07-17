@@ -36,10 +36,10 @@ export class ProxyRequestDto {
   @IsOptional()
   headers?: Record<string, string> = {};
 
-  @ApiProperty({ example: { id: 1 }, description: 'Request body' })
+  @ApiProperty({ default: null, description: 'Request body' })
   @IsObject()
   @IsOptional()
-  body?: Record<string, any> = {};
+  body?: Record<string, any> = null;
 
   @ApiProperty({ default: null, description: 'A proxy host or IP address' })
   @IsIP()
