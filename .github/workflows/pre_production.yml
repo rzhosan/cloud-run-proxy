@@ -1,0 +1,25 @@
+name: Pre Production
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'api-gateway/**'
+      - 'Services/**'
+      - 'infrastructure/**'
+      - '.github/**'
+
+jobs:
+  wait_for_spacelift:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Wait for Spacelift
+        uses: ./.github/actions/wait_for_spacelift
+        with:
+          spacelift_check_name: spacelift/rdc-api-dev
+          max_minutes_to_wait: 10
+          github_token: ${{ secrets.GITHUB_TOKEN }}

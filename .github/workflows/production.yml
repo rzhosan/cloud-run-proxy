@@ -1,0 +1,17 @@
+name: production
+
+on:
+  workflow_run:
+    workflows: [Pre Production]
+    types: [completed]
+  workflow_call:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print env
+        run: echo ${{ vars.NEW_VAR }}
+
+      - name: Notify of Check Run Completion
+        run: echo "Check Run has completed!"
