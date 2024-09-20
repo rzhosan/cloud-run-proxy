@@ -1,0 +1,17 @@
+name: Trigger on Check Run Completion
+
+on:
+  check_run:
+    types:
+      - completed
+
+jobs:
+  handle_check_run_completion:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify of Check Run Completion
+        run: echo "Check Run has completed!"
+
+      - name: Check Run Details
+        run: |
+          echo "Check run conclusion: ${{ github.event.check_run.conclusion }}"
