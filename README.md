@@ -1,73 +1,91 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# cloud-run-proxy
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A lightweight HTTP proxy service built with NestJS, designed to run on Google Cloud Run. It forwards HTTP requests through an optional upstream proxy IP, making it useful for routing traffic through specific egress points.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+[![Publish to GHCR](https://github.com/rzhosan/cloud-run-proxy/actions/workflows/publish.yml/badge.svg)](https://github.com/rzhosan/cloud-run-proxy/actions/workflows/publish.yml)
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
+## Docker
 
 ```bash
-$ yarn install
+docker pull ghcr.io/rzhosan/cloud-run-proxy:latest
+docker run -p 8080:8080 ghcr.io/rzhosan/cloud-run-proxy:latest
 ```
 
-## Running the app
+## API
+
+### `GET /health`
+
+Returns service status, version, and the caller's IP address.
+
+**Response:**
+```json
+{
+  "version": "1.0.0",
+  "healthy": true,
+  "timestamp": "2024-01-01T00:00:00.000Z",
+  "your_ip": "1.2.3.4",
+  "headers": {}
+}
+```
+
+Set the `VERSION` environment variable to expose your deployment version.
+
+---
+
+### `POST /proxy`
+
+Forwards an HTTP request to the specified URL, optionally routing through a proxy IP.
+
+**Request body:**
+
+| Field     | Type   | Required | Default | Description                          |
+|-----------|--------|----------|---------|--------------------------------------|
+| `url`     | string | yes      | —       | Target URL to forward the request to |
+| `method`  | string | no       | `get`   | HTTP method                          |
+| `headers` | object | no       | `{}`    | Headers to forward                   |
+| `body`    | object | no       | `null`  | Request body                         |
+| `timeout` | number | no       | `10000` | Timeout in milliseconds              |
+| `proxyIp` | string | no       | `null`  | Upstream proxy host/IP (port 80)     |
+
+**Example:**
+```bash
+curl -X POST http://localhost:8080/proxy \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://jsonplaceholder.typicode.com/posts/1",
+    "method": "get"
+  }'
+```
+
+**Response:**
+```json
+{
+  "status": 200,
+  "data": { ... },
+  "headers": { ... }
+}
+```
+
+## Development
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+yarn install
+yarn start:dev
 ```
-
-## Test
 
 ```bash
 # unit tests
-$ yarn run test
+yarn test
 
 # e2e tests
-$ yarn run test:e2e
+yarn test:e2e
 
-# test coverage
-$ yarn run test:cov
+# coverage
+yarn test:cov
 ```
 
-## Support
+## Stack
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- [NestJS](https://nestjs.com/) v11
+- Node.js 24
+- Docker / Google Cloud Run
